@@ -27,6 +27,8 @@ func TestNotEmptyValidator(t *testing.T) {
 		{"validate_([]string{\"hello\"})", []string{"hello"}, true, 0},
 		{"validate_(map[string]string{})", make(map[string]string), false, 1},
 		{"validate_(map[string]string{\"hello\": \"world\"})", map[string]string{"hello": "world"}, true, 0},
+		{"validate_(struct{}{})", struct{}{}, false, 1},
+		{"validate_(struct{Name string}{\"hello\"})", struct{Name string}{"hello"}, true, 0},
 	}{
 		t.Run(testCase.Name, func(t *testing.T) {
 			result := validator(testCase.Value)

@@ -5,7 +5,7 @@ type ValidationResult struct {
 	Messages []string
 }
 
-type ValueObscurator func (x interface{}) string
+type ValueObscurator func (limit int, x interface{}) string
 
 type MessageTemplateFunc func (options ValidatorOptions, x interface{}) string
 
