@@ -39,6 +39,6 @@ func IsEmpty (x interface{}) bool {
 	return false
 }
 
-func isWithinRange (min, max, x int) bool {
+func isWithinRangeInt (min, max, x int) bool {
 	return x >= min && x <= max
 }
