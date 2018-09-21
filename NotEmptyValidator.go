@@ -1,8 +1,6 @@
 package ecms_validator
 
-import (
-	"reflect"
-)
+import "github.com/extensible-cms/ecms-go-validator/is"
 
 type NotEmptyValidatorOptions struct {
 	MessageTemplates map[int]MessageTemplateFunc
@@ -24,21 +22,6 @@ const (
 	EmptyNotAllowed = iota
 )
 
-func isEmpty (x interface{}) bool {
-	if x == nil || x == 0 || x == false {
-		return true
-	}
-	rv := reflect.ValueOf(x)
-	rk := rv.Kind()
-	switch rk {
-	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
-		if rv.Len() == 0 {
-			return true
-		}
-	}
-	return false
-}
-
 func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
 	messageTemplates := map[int]MessageTemplateFunc{
 		EmptyNotAllowed: func(ops ValidatorOptions, x interface{}) string {
@@ -52,7 +35,7 @@ func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
 
 func NotEmptyValidatorGenerator (options ValidatorOptions) Validator {
 	return func (x interface{}) ValidationResult {
-		if isEmpty(x) {
+		if IsEmpty(x) {
 			return ValidationResult{false, []string{GetErrorMessageByKey(options, EmptyNotAllowed, x)}}
 		}
 		return ValidationResult{true, make([]string, 0)}
