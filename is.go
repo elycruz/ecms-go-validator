@@ -39,10 +39,26 @@ func IsEmpty (x interface{}) bool {
 	return false
 }
 
-func isWithinRangeInt (min, max, x int64) bool {
-	return x >= min && x <= max
+func IsWithinRangeInt(min, max, x int64) bool {
+	xMin, xMax := normalizeMinMaxInt(min, max)
+	return x >= xMin && x <= xMax
 }
 
-func isWithinRangeFloat (min, max, x float64) bool {
-	return x >= min && x <= max
+func IsWithinRangeFloat(min, max, x float64) bool {
+	xMin, xMax := normalizeMinMaxFloat(min, max)
+	return x >= xMin && x <= xMax
+}
+
+func normalizeMinMaxInt (min, max int64) (int64, int64) {
+	if max < min {
+		return max, min
+	}
+	return min, max
+}
+
+func normalizeMinMaxFloat (min, max float64) (float64, float64) {
+	if max < min {
+		return max, min
+	}
+	return min, max
 }
