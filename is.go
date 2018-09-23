@@ -39,6 +39,10 @@ func IsEmpty (x interface{}) bool {
 	return false
 }
 
-func isWithinRangeInt (min, max, x int) bool {
+func isWithinRangeInt (min, max, x int64) bool {
+	return x >= min && x <= max
+}
+
+func isWithinRangeFloat (min, max, x float64) bool {
 	return x >= min && x <= max
 }

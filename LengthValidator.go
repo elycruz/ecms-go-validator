@@ -7,6 +7,7 @@ import (
 
 const (
 	LengthNotWithinRange = iota
+	NotLengthable
 )
 
 type LengthValidatorOptions struct {
@@ -53,13 +54,10 @@ func LengthValidator (options ValidatorOptions) Validator {
 					[]string{ops.GetErrorMessageByKey(LengthNotWithinRange, x)},
 				}
 			}
-		case reflect.Struct:
-			l := rv.NumField()
-			if !isWithinRangeInt(ops.Min, ops.Max, l) {
-				return ValidationResult{
-					false,
-					[]string{ops.GetErrorMessageByKey(LengthNotWithinRange, x)},
-				}
+		default:
+			return ValidationResult{
+				false,
+				[]string{ops.GetErrorMessageByKey(NotLengthable, x)},
 			}
 		}
 		return ValidationResult{true, make([]string, 0)}
