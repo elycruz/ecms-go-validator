@@ -1,5 +1,9 @@
 package ecms_validator
 
+import (
+	. "github.com/extensible-cms/ecms-go-validator/is"
+)
+
 type NotEmptyValidatorOptions struct {
 	MessageTemplates map[int]MessageTemplateFunc
 }

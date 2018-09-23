@@ -2,6 +2,7 @@ package ecms_validator
 
 import (
 "fmt"
+. "github.com/extensible-cms/ecms-go-validator/is"
 "reflect"
 )
 

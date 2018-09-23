@@ -1,4 +1,4 @@
-package ecms_validator
+package is
 
 import (
 	"reflect"
