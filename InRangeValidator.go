@@ -81,7 +81,7 @@ func IntRangeValidator (options ValidatorOptions) Validator {
 		default:
 			return failedResult
 		}
-		if !IsWithinRangeInt(ops.Min, ops.Max, intToCheck) {
+		if !WithinRangeInt(ops.Min, ops.Max, intToCheck) {
 			return failedResult
 		}
 		return ValidationResult{true, make([]string, 0)}
@@ -107,7 +107,7 @@ func FloatRangeValidator (options ValidatorOptions) Validator {
 		default:
 			return failedResult
 		}
-		if !IsWithinRangeFloat(ops.Min, ops.Max, floatToCheck) {
+		if !WithinRangeFloat(ops.Min, ops.Max, floatToCheck) {
 			return failedResult
 		}
 		return ValidationResult{true, make([]string, 0)}

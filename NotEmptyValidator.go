@@ -8,18 +8,6 @@ type NotEmptyValidatorOptions struct {
 	MessageTemplates map[int]MessageTemplateFunc
 }
 
-func (n NotEmptyValidatorOptions) GetErrorMessageByKey (key int, x interface{}) string {
-	return GetErrorMessageByKey(n, key, x)
-}
-
-func (n NotEmptyValidatorOptions) GetMessageTemplates () MessageTemplateFuncs {
-	return n.MessageTemplates
-}
-
-func (n NotEmptyValidatorOptions) GetValueObscurator () ValueObscurator {
-	return DefaultValueObscurator
-}
-
 const (
 	EmptyNotAllowed = iota
 )
@@ -35,15 +23,27 @@ func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
 	}
 }
 
-func NotEmptyValidatorGenerator (options ValidatorOptions) Validator {
+func NotEmptyValidator (options ValidatorOptions) Validator {
 	return func (x interface{}) ValidationResult {
-		if IsEmpty(x) {
+		if Empty(x) {
 			return ValidationResult{false, []string{GetErrorMessageByKey(options, EmptyNotAllowed, x)}}
 		}
 		return ValidationResult{true, make([]string, 0)}
 	}
 }
 
-func NotEmptyValidator () Validator {
-	return NotEmptyValidatorGenerator(NewNotEmptyValidatorOptions())
+func NotEmptyValidator1 () Validator {
+	return NotEmptyValidator(NewNotEmptyValidatorOptions())
+}
+
+func (n NotEmptyValidatorOptions) GetErrorMessageByKey (key int, x interface{}) string {
+	return GetErrorMessageByKey(n, key, x)
+}
+
+func (n NotEmptyValidatorOptions) GetMessageTemplates () MessageTemplateFuncs {
+	return n.MessageTemplates
+}
+
+func (n NotEmptyValidatorOptions) GetValueObscurator () ValueObscurator {
+	return DefaultValueObscurator
 }

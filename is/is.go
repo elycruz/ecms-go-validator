@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func IsEmpty (x interface{}) bool {
+func Empty(x interface{}) bool {
 	rv := reflect.ValueOf(x)
 	switch rv.Kind() {
 	case reflect.Invalid:
@@ -25,7 +25,7 @@ func IsEmpty (x interface{}) bool {
 	case reflect.Struct:
 		numFields := rv.NumField()
 		for ind := 0; ind < numFields; ind += 1 {
-			if !IsEmpty(rv.Field(ind).Interface()) {
+			if !Empty(rv.Field(ind).Interface()) {
 				return false
 			}
 		}
@@ -34,17 +34,17 @@ func IsEmpty (x interface{}) bool {
 		if rv.IsNil() {
 			return true
 		}
-		return IsEmpty(rv.Elem().Interface())
+		return Empty(rv.Elem().Interface())
 	}
 	return false
 }
 
-func IsWithinRangeInt(min, max, x int64) bool {
+func WithinRangeInt(min, max, x int64) bool {
 	xMin, xMax := normalizeMinMaxInt(min, max)
 	return x >= xMin && x <= xMax
 }
 
-func IsWithinRangeFloat(min, max, x float64) bool {
+func WithinRangeFloat(min, max, x float64) bool {
 	xMin, xMax := normalizeMinMaxFloat(min, max)
 	return x >= xMin && x <= xMax
 }

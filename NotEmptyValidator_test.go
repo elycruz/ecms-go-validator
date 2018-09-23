@@ -18,7 +18,7 @@ func TestNotEmptyValidator(t *testing.T) {
 			},
 		},
 	}
-	validator := NotEmptyValidatorGenerator(validatorOptions)
+	validator := NotEmptyValidator(validatorOptions)
 	for _, testCase := range []NotEmptyValidatorTestCase{
 		{"validate_(nil)", nil, false, 1},
 		{"validate_(0)", 0, false, 1},
