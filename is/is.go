@@ -24,6 +24,7 @@ func Empty(x interface{}) bool {
 		return rv.Complex() == c
 	case reflect.Struct:
 		numFields := rv.NumField()
+		if numFields == 0 { return true }
 		for ind := 0; ind < numFields; ind += 1 {
 			if !Empty(rv.Field(ind).Interface()) {
 				return false
@@ -39,24 +40,24 @@ func Empty(x interface{}) bool {
 	return false
 }
 
-func WithinRangeInt(min, max, x int64) bool {
-	xMin, xMax := normalizeMinMaxInt(min, max)
+func IntWithinRange(min, max, x int64) bool {
+	xMin, xMax := normalizeMinMaxForInt(min, max)
 	return x >= xMin && x <= xMax
 }
 
-func WithinRangeFloat(min, max, x float64) bool {
-	xMin, xMax := normalizeMinMaxFloat(min, max)
+func FloatWithinRange(min, max, x float64) bool {
+	xMin, xMax := normalizeMinMaxForFloat(min, max)
 	return x >= xMin && x <= xMax
 }
 
-func normalizeMinMaxInt (min, max int64) (int64, int64) {
+func normalizeMinMaxForInt(min, max int64) (int64, int64) {
 	if max < min {
 		return max, min
 	}
 	return min, max
 }
 
-func normalizeMinMaxFloat (min, max float64) (float64, float64) {
+func normalizeMinMaxForFloat(min, max float64) (float64, float64) {
 	if max < min {
 		return max, min
 	}

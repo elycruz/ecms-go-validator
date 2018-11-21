@@ -31,17 +31,17 @@ func TestNotEmptyValidator(t *testing.T) {
 		{"validate_(struct{Name string}{\"hello\"})", struct{Name string}{"hello"}, true, 0},
 	}{
 		t.Run(testCase.Name, func(t *testing.T) {
-			result := validator(testCase.Value)
-			messagesLen := len(result.Messages)
-			if result.Result != testCase.ExpectedResultBln {
+			result, messages := validator(testCase.Value)
+			messagesLen := len(messages)
+			if result != testCase.ExpectedResultBln {
 				t.Errorf("Expected %v for `result.Result` but got %v",
-					testCase.ExpectedResultBln, result.Result)
+					testCase.ExpectedResultBln, result)
 			}
 			if messagesLen != testCase.ExpectedMessagesLen  {
 				t.Errorf("Expected %d messages.  Got %d",
 					testCase.ExpectedMessagesLen, messagesLen)
 			}
-			for _, message := range result.Messages {
+			for _, message := range messages {
 				if len(message) == 0 {
 					t.Error("Expected non-empty message strings.  " +
 						"Received an empty message string.")

@@ -24,11 +24,11 @@ func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
 }
 
 func NotEmptyValidator (options ValidatorOptions) Validator {
-	return func (x interface{}) ValidationResult {
+	return func (x interface{}) (bool, []string){
 		if Empty(x) {
-			return ValidationResult{false, []string{GetErrorMessageByKey(options, EmptyNotAllowed, x)}}
+			return false, []string{GetErrorMessageByKey(options, EmptyNotAllowed, x)}
 		}
-		return ValidationResult{true, make([]string, 0)}
+		return true, nil
 	}
 }
 

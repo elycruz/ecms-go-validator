@@ -1,10 +1,5 @@
 package ecms_validator
 
-type ValidationResult struct {
-	Result bool
-	Messages []string
-}
-
 type ValueObscurator func (limit int, x interface{}) string
 
 type MessageTemplateFunc func (options ValidatorOptions, x interface{}) string
@@ -19,4 +14,4 @@ type ValidatorOptions interface {
 
 type ValidatorGenerator func (options ValidatorOptions) Validator
 
-type Validator func (x interface{}) ValidationResult
+type Validator func (x interface{}) (bool, []string)

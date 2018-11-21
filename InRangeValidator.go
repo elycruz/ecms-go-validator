@@ -1,9 +1,9 @@
 package ecms_validator
 
 import (
-"fmt"
-. "github.com/extensible-cms/ecms-go-validator/is"
-"reflect"
+	"fmt"
+	. "github.com/extensible-cms/ecms-go-validator/is"
+	"reflect"
 )
 
 const (
@@ -11,28 +11,27 @@ const (
 	NotARangeType
 )
 
-var DefaultInRangeMessageFuncs =
-	MessageTemplateFuncs{
-		NotARangeType: func(options ValidatorOptions, x interface{}) string {
-			return fmt.Sprintf("%v is not a validatable numeric type", x)
-		},
-	}
+var DefaultInRangeMessageFuncs = MessageTemplateFuncs{
+	NotARangeType: func(options ValidatorOptions, x interface{}) string {
+		return fmt.Sprintf("%v is not a validatable numeric type", x)
+	},
+}
 
 type IntValidatorOptions struct {
 	MessageTemplates MessageTemplateFuncs
-	Min int64
-	Max int64
-	Inclusive bool
+	Min              int64
+	Max              int64
+	Inclusive        bool
 }
 
 type FloatValidatorOptions struct {
 	MessageTemplates MessageTemplateFuncs
-	Min float64
-	Max float64
-	Inclusive bool
+	Min              float64
+	Max              float64
+	Inclusive        bool
 }
 
-func NewIntRangeValidatorOptions () IntValidatorOptions {
+func NewIntRangeValidatorOptions() IntValidatorOptions {
 	return IntValidatorOptions{
 		map[int]MessageTemplateFunc{
 			NotWithinRange: func(options ValidatorOptions, x interface{}) string {
@@ -47,7 +46,7 @@ func NewIntRangeValidatorOptions () IntValidatorOptions {
 	}
 }
 
-func NewFloatRangeValidatorOptions () FloatValidatorOptions {
+func NewFloatRangeValidatorOptions() FloatValidatorOptions {
 	return FloatValidatorOptions{
 		map[int]MessageTemplateFunc{
 			NotWithinRange: func(options ValidatorOptions, x interface{}) string {
@@ -62,42 +61,36 @@ func NewFloatRangeValidatorOptions () FloatValidatorOptions {
 	}
 }
 
-func IntRangeValidator (options ValidatorOptions) Validator {
+func IntRangeValidator(options ValidatorOptions) Validator {
 	ops := options.(IntValidatorOptions)
-	return func(x interface{}) ValidationResult {
-		rv := reflect.ValueOf(x)
+	return func(x interface{}) (bool, []string) {
 		var intToCheck int64
-		failedResult := ValidationResult{
-			false,
-			[]string{ops.GetErrorMessageByKey(NotWithinRange, x)},
-		}
+		rv := reflect.ValueOf(x)
 		switch rv.Kind() {
 		case reflect.Invalid:
-			return failedResult
+			return false, []string{ops.GetErrorMessageByKey(NotARangeType, x)}
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			intToCheck = rv.Int()
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 			intToCheck = int64(rv.Uint())
 		default:
-			return failedResult
+			return false, []string{ops.GetErrorMessageByKey(NotARangeType, x)}
 		}
-		if !WithinRangeInt(ops.Min, ops.Max, intToCheck) {
-			return failedResult
+		if !IntWithinRange(ops.Min, ops.Max, intToCheck) {
+			return false, []string{ops.GetErrorMessageByKey(NotWithinRange, x)}
 		}
-		return ValidationResult{true, make([]string, 0)}
+		return true, nil
 	}
 }
 
-func FloatRangeValidator (options ValidatorOptions) Validator {
+func FloatRangeValidator(options ValidatorOptions) Validator {
 	ops := options.(FloatValidatorOptions)
-	return func(x interface{}) ValidationResult {
+	return func(x interface{}) (bool, []string) {
 		rv := reflect.ValueOf(x)
 		var floatToCheck float64
-		failedResult := ValidationResult{
-			false,
-			[]string{ops.GetErrorMessageByKey(NotWithinRange, x)},
-		}
 		switch rv.Kind() {
+		case reflect.Invalid:
+			return false, []string{ops.GetErrorMessageByKey(NotARangeType, x)}
 		case reflect.Float32, reflect.Float64:
 			floatToCheck = rv.Float()
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -105,35 +98,35 @@ func FloatRangeValidator (options ValidatorOptions) Validator {
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 			floatToCheck = float64(rv.Uint())
 		default:
-			return failedResult
+			return false, []string{ops.GetErrorMessageByKey(NotARangeType, x)}
 		}
-		if !WithinRangeFloat(ops.Min, ops.Max, floatToCheck) {
-			return failedResult
+		if !FloatWithinRange(ops.Min, ops.Max, floatToCheck) {
+			return false, []string{ops.GetErrorMessageByKey(NotWithinRange, x)}
 		}
-		return ValidationResult{true, make([]string, 0)}
+		return true, nil
 	}
 }
 
-func (n IntValidatorOptions) GetErrorMessageByKey (key int, x interface{}) string {
+func (n IntValidatorOptions) GetErrorMessageByKey(key int, x interface{}) string {
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n IntValidatorOptions) GetMessageTemplates () MessageTemplateFuncs {
+func (n IntValidatorOptions) GetMessageTemplates() MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 
-func (n IntValidatorOptions) GetValueObscurator () ValueObscurator {
+func (n IntValidatorOptions) GetValueObscurator() ValueObscurator {
 	return DefaultValueObscurator
 }
 
-func (n FloatValidatorOptions) GetErrorMessageByKey (key int, x interface{}) string {
+func (n FloatValidatorOptions) GetErrorMessageByKey(key int, x interface{}) string {
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n FloatValidatorOptions) GetMessageTemplates () MessageTemplateFuncs {
+func (n FloatValidatorOptions) GetMessageTemplates() MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 
-func (n FloatValidatorOptions) GetValueObscurator () ValueObscurator {
+func (n FloatValidatorOptions) GetValueObscurator() ValueObscurator {
 	return DefaultValueObscurator
 }

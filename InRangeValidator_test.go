@@ -34,17 +34,17 @@ func TestIntRangeValidator(t *testing.T) {
 			validatorOptions.Min = testCase.Min
 			validatorOptions.Max = testCase.Max
 			validator := IntRangeValidator(validatorOptions)
-			result := validator(testCase.TestValue)
-			messagesLen := len(result.Messages)
-			if result.Result != testCase.ExpectedResultBln {
-				t.Errorf("Expected %v for `result.Result` but got %v",
-					testCase.ExpectedResultBln, result.Result)
+			resultBln, messages := validator(testCase.TestValue)
+			messagesLen := len(messages)
+			if resultBln != testCase.ExpectedResultBln {
+				t.Errorf("Expected %v for `resultBln.Result` but got %v",
+					testCase.ExpectedResultBln, resultBln)
 			}
 			if messagesLen != testCase.ExpectedMessagesLen  {
 				t.Errorf("Expected %d messages.  Got %d;  Messages: %v",
-					testCase.ExpectedMessagesLen, messagesLen, result.Messages)
+					testCase.ExpectedMessagesLen, messagesLen, messages)
 			}
-			for _, message := range result.Messages {
+			for _, message := range messages {
 				if len(message) == 0 {
 					t.Error("Expected non-empty message strings.  " +
 						"Received an empty message string.")
@@ -66,17 +66,17 @@ func TestFloatRangeValidator(t *testing.T) {
 			validatorOptions.Min = testCase.Min
 			validatorOptions.Max = testCase.Max
 			validator := FloatRangeValidator(validatorOptions)
-			result := validator(testCase.TestValue)
-			messagesLen := len(result.Messages)
-			if result.Result != testCase.ExpectedResultBln {
-				t.Errorf("Expected %v for `result.Result` but got %v",
-					testCase.ExpectedResultBln, result.Result)
+			resultBln, messages := validator(testCase.TestValue)
+			messagesLen := len(messages)
+			if resultBln != testCase.ExpectedResultBln {
+				t.Errorf("Expected %v for `resultBln.Result` but got %v",
+					testCase.ExpectedResultBln, resultBln)
 			}
 			if messagesLen != testCase.ExpectedMessagesLen  {
 				t.Errorf("Expected %d messages.  Got %d;  Messages: %v",
-					testCase.ExpectedMessagesLen, messagesLen, result.Messages)
+					testCase.ExpectedMessagesLen, messagesLen, messages)
 			}
-			for _, message := range result.Messages {
+			for _, message := range messages {
 				if len(message) == 0 {
 					t.Error("Expected non-empty message strings.  " +
 						"Received an empty message string.")
