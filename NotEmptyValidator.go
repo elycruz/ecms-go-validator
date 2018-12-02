@@ -10,12 +10,13 @@ type NotEmptyValidatorOptions struct {
 
 const (
 	EmptyNotAllowed = iota
+	DefaultEmptyNotAllowedMsg = "Empty values are not allowed."
 )
 
 func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
 	messageTemplates := map[int]MessageTemplateFunc{
 		EmptyNotAllowed: func(ops ValidatorOptions, x interface{}) string {
-			return "Empty values are not allowed."
+			return DefaultEmptyNotAllowedMsg
 		},
 	}
 	return NotEmptyValidatorOptions{
