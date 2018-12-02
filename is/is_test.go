@@ -64,3 +64,27 @@ func TestFloatWithinRange(t *testing.T) {
 		})
 	}
 }
+
+func TestIntWithinRange(t *testing.T) {
+	type IntTestCase struct {
+		Name string
+		Subj int64
+		Min int64
+		Max int64
+		Expected bool
+	}
+	for _, tc := range []IntTestCase{
+		{Name: "0_within_range_-1_to_1", Subj: 0, Min: -1, Max: 1, Expected: true},
+		{Name: "-0_within_range_-1_to_1", Subj: -0, Min: -1, Max: 1, Expected: true},
+		{Name: "-0_within_range_0_to_1", Subj: -0, Min: 0, Max: 1, Expected: true},
+		{Name: "99_within_range_89_to_99", Subj: 99, Min: 89, Max: 99, Expected: true},
+		{Name: "99_not_within_range_-1_to_1", Subj: 99, Min: -1, Max: 1, Expected: false},
+	}{
+		t.Run(tc.Name, func(t2 *testing.T) {
+			result := IntWithinRange(tc.Min, tc.Max, tc.Subj)
+			if result != tc.Expected {
+				t2.Errorf("Expected %v; Got %v; For value %v", result, tc.Expected, tc.Subj)
+			}
+		})
+	}
+}
