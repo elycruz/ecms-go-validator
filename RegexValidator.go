@@ -34,7 +34,12 @@ func NewRegexValidatorOptions () RegexValidatorOptions {
 
 func RegexValidator(options RegexValidatorOptions) Validator {
 	return func(x interface{}) (bool, []string) {
-		match := options.Pattern.Match(x.([]byte))
+		if x == nil {
+			return false, []string {
+				options.GetErrorMessageByKey(DoesNotMatchPattern, ""),
+			}
+		}
+		match := options.Pattern.Match([]byte(x.(string)))
 		if match != true {
 			return false, []string{
 				options.GetErrorMessageByKey(DoesNotMatchPattern, x),
