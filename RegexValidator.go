@@ -11,13 +11,13 @@ const (
 
 type RegexValidatorOptions struct {
 	Pattern *regexp.Regexp
-	MessageTemplates map[int]MessageTemplateFunc
+	MessageTemplates *MessageTemplateFuncs
 }
 
-var RegexValidatorMessageFuncs MessageTemplateFuncs
+var RegexValidatorMessageFuncs *MessageTemplateFuncs
 
 func init() {
-	RegexValidatorMessageFuncs = MessageTemplateFuncs{
+	RegexValidatorMessageFuncs = &MessageTemplateFuncs{
 		DoesNotMatchPattern: func(options ValidatorOptions, x interface{}) string {
 			ops := options.(RegexValidatorOptions)
 			return fmt.Sprintf("%v is does not match required pattern %v", x, ops.Pattern.String())
@@ -53,7 +53,7 @@ func (n RegexValidatorOptions) GetErrorMessageByKey(key int, x interface{}) stri
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n RegexValidatorOptions) GetMessageTemplates() MessageTemplateFuncs {
+func (n RegexValidatorOptions) GetMessageTemplates() *MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 
