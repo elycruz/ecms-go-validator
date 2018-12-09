@@ -14,7 +14,7 @@ Also, one more unique change to validators;  They receive, in their options stru
 allows users to customize any one of the messages contained in the `MessageTemplateFuncs` map (yes all it is, is a `map[int]MessageTemplateFunc` (look at types file in src)).
 
 ## Mvp Todos
-- [ ] - Remove `ValidationResult` struct.  We ca return multiple values in go.  Is there really a need for `ValidationResult`?
+- [x] - Remove `ValidationResult` struct.  We ca return multiple values in go.  Is there really a need for `ValidationResult`?
 - [ ] - Change Validator signature to `func (x interface{}) []string`
 
 ## License
