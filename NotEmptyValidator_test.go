@@ -12,7 +12,7 @@ type NotEmptyValidatorTestCase struct {
 func TestNotEmptyValidator(t *testing.T) {
 	expectedErrorMessage := "Empty values are not allowed.  Received and empty value."
 	validatorOptions := NotEmptyValidatorOptions{
-		MessageTemplates: MessageTemplateFuncs{
+		MessageTemplates: &MessageTemplateFuncs{
 			EmptyNotAllowed: func(options ValidatorOptions, x interface{}) string {
 				return expectedErrorMessage
 			},

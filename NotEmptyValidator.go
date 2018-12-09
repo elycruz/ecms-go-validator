@@ -5,7 +5,7 @@ import (
 )
 
 type NotEmptyValidatorOptions struct {
-	MessageTemplates map[int]MessageTemplateFunc
+	MessageTemplates *MessageTemplateFuncs
 }
 
 const (
@@ -14,13 +14,12 @@ const (
 )
 
 func NewNotEmptyValidatorOptions () NotEmptyValidatorOptions {
-	messageTemplates := map[int]MessageTemplateFunc{
-		EmptyNotAllowed: func(ops ValidatorOptions, x interface{}) string {
-			return DefaultEmptyNotAllowedMsg
-		},
-	}
 	return NotEmptyValidatorOptions{
-		MessageTemplates: messageTemplates,
+		MessageTemplates: &MessageTemplateFuncs{
+			EmptyNotAllowed: func(ops ValidatorOptions, x interface{}) string {
+				return DefaultEmptyNotAllowedMsg
+			},
+		},
 	}
 }
 
@@ -41,7 +40,7 @@ func (n NotEmptyValidatorOptions) GetErrorMessageByKey (key int, x interface{}) 
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n NotEmptyValidatorOptions) GetMessageTemplates () MessageTemplateFuncs {
+func (n NotEmptyValidatorOptions) GetMessageTemplates () *MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 

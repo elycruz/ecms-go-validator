@@ -18,14 +18,14 @@ var DefaultInRangeMessageFuncs = MessageTemplateFuncs{
 }
 
 type IntValidatorOptions struct {
-	MessageTemplates MessageTemplateFuncs
+	MessageTemplates *MessageTemplateFuncs
 	Min              int64
 	Max              int64
 	Inclusive        bool
 }
 
 type FloatValidatorOptions struct {
-	MessageTemplates MessageTemplateFuncs
+	MessageTemplates *MessageTemplateFuncs
 	Min              float64
 	Max              float64
 	Inclusive        bool
@@ -33,31 +33,31 @@ type FloatValidatorOptions struct {
 
 func NewIntRangeValidatorOptions() IntValidatorOptions {
 	return IntValidatorOptions{
-		map[int]MessageTemplateFunc{
+		MessageTemplates: &MessageTemplateFuncs{
 			NotWithinRange: func(options ValidatorOptions, x interface{}) string {
 				ops := options.(IntValidatorOptions)
 				return fmt.Sprintf("%v is not within range %d and %d", x, ops.Min, ops.Max)
 			},
 			NotARangeType: DefaultInRangeMessageFuncs[NotARangeType],
 		},
-		0,
-		0,
-		true,
+		Min: 0,
+		Max: 0,
+		Inclusive: true,
 	}
 }
 
 func NewFloatRangeValidatorOptions() FloatValidatorOptions {
 	return FloatValidatorOptions{
-		map[int]MessageTemplateFunc{
+		MessageTemplates: &MessageTemplateFuncs{
 			NotWithinRange: func(options ValidatorOptions, x interface{}) string {
 				ops := options.(FloatValidatorOptions)
 				return fmt.Sprintf("%v is not within range %f and %f", x, ops.Min, ops.Max)
 			},
 			NotARangeType: DefaultInRangeMessageFuncs[NotARangeType],
 		},
-		0.0,
-		0.0,
-		true,
+		Min: 0.0,
+		Max: 0.0,
+		Inclusive: true,
 	}
 }
 
@@ -111,7 +111,7 @@ func (n IntValidatorOptions) GetErrorMessageByKey(key int, x interface{}) string
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n IntValidatorOptions) GetMessageTemplates() MessageTemplateFuncs {
+func (n IntValidatorOptions) GetMessageTemplates() *MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 
@@ -123,7 +123,7 @@ func (n FloatValidatorOptions) GetErrorMessageByKey(key int, x interface{}) stri
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n FloatValidatorOptions) GetMessageTemplates() MessageTemplateFuncs {
+func (n FloatValidatorOptions) GetMessageTemplates() *MessageTemplateFuncs {
 	return n.MessageTemplates
 }
 

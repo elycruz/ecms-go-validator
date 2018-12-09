@@ -7,7 +7,7 @@ type MessageTemplateFunc func (options ValidatorOptions, x interface{}) string
 type MessageTemplateFuncs map[int]MessageTemplateFunc
 
 type ValidatorOptions interface {
-	GetMessageTemplates () MessageTemplateFuncs
+	GetMessageTemplates () *MessageTemplateFuncs
 	GetErrorMessageByKey (key int, value interface{}) string
 	GetValueObscurator () ValueObscurator
 }
