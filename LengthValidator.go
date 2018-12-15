@@ -47,7 +47,7 @@ func LengthValidator (options LengthValidatorOptions) Validator {
 		switch rv.Kind() {
 		case reflect.Invalid:
 			return false, []string{ops.GetErrorMessageByKey(NotAValidType, x)}
-		case reflect.Slice, reflect.Array, reflect.Map, reflect.String:
+		case reflect.Slice, reflect.Array, reflect.Map, reflect.String, reflect.Chan:
 			intToCheck = int64(rv.Len())
 		default:
 			return false, []string{ops.GetErrorMessageByKey(NotAValidType, x)}
