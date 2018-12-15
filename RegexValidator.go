@@ -20,7 +20,11 @@ func init() {
 	RegexValidatorMessageFuncs = &MessageTemplateFuncs{
 		DoesNotMatchPattern: func(options ValidatorOptions, x interface{}) string {
 			ops := options.(RegexValidatorOptions)
-			return fmt.Sprintf("%v is does not match required pattern %v", x, ops.Pattern.String())
+			var pattern string
+			if ops.Pattern != nil {
+				pattern = ops.Pattern.String()
+			}
+			return fmt.Sprintf("%v is does not match required pattern `%v`", x, pattern)
 		},
 	}
 }
@@ -34,12 +38,22 @@ func NewRegexValidatorOptions () RegexValidatorOptions {
 
 func RegexValidator(options RegexValidatorOptions) Validator {
 	return func(x interface{}) (bool, []string) {
-		if x == nil {
-			return false, []string {
-				options.GetErrorMessageByKey(DoesNotMatchPattern, ""),
+		if options.Pattern == nil {
+			isValid := x == nil
+			if !isValid {
+				return false, []string {
+					options.GetErrorMessageByKey(DoesNotMatchPattern, x),
+				}
 			}
+			return true, nil
 		}
-		match := options.Pattern.Match([]byte(x.(string)))
+		var match bool
+		if options.Pattern != nil && x == nil {
+			match = false
+		} else {
+			match = options.Pattern.Match([]byte(x.(string)))
+		}
+
 		if match != true {
 			return false, []string{
 				options.GetErrorMessageByKey(DoesNotMatchPattern, x),

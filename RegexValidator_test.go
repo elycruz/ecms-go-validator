@@ -22,11 +22,12 @@ func TestNewRegexValidatorOptions(t *testing.T) {
 
 func TestRegexValidator(t *testing.T) {
 	for _, tc := range []RegexValidatorTestCase{
-		{Name: "//_$_true", PatternStr: "", Value: "$", Expected: true, ExpectedMsgsLen: 0},
-		{Name: "//_''_true", PatternStr: "", Value: "", Expected: true, ExpectedMsgsLen: 0},
+		{Name: "//_$_true", PatternStr: "", Value: "$", Expected: false, ExpectedMsgsLen: 1},
+		{Name: "//_''_true", PatternStr: "", Value: "", Expected: false, ExpectedMsgsLen: 1},
 		{Name: "/./_$_true", PatternStr: ".", Value: "$", Expected: true, ExpectedMsgsLen: 0},
 		{Name: "/./_''_false", PatternStr: ".", Value: "", Expected: false, ExpectedMsgsLen: 1},
 		{Name: "/./_nil_false", PatternStr: ".", Value: nil, Expected: false, ExpectedMsgsLen: 1},
+		{Name: "nil_nil_true", Value: nil, Expected: true, ExpectedMsgsLen: 0},
 		{Name: "/^\\d+$/_99_true", PatternStr: "^\\d+$", Value: "99", Expected: true, ExpectedMsgsLen: 0},
 		{Name: "/\\d/_99_true", PatternStr: "\\d", Value: "99", Expected: true, ExpectedMsgsLen: 0},
 		{Name: "/\\d/_abc_false", PatternStr: "\\d", Value: "abc", Expected: false, ExpectedMsgsLen: 1},
@@ -35,8 +36,10 @@ func TestRegexValidator(t *testing.T) {
 	} {
 		t.Run(tc.Name, func(t2 *testing.T) {
 			vOptions := NewRegexValidatorOptions()
-			regex := regexp.MustCompile(tc.PatternStr)
-			vOptions.Pattern = regex
+			if len(tc.PatternStr) > 0 {
+				regex := regexp.MustCompile(tc.PatternStr)
+				vOptions.Pattern = regex
+			}
 			validator := RegexValidator(vOptions)
 			result, msgs := validator(tc.Value)
 			msgsLen := len(msgs)
