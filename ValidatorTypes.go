@@ -2,12 +2,12 @@ package ecms_validator
 
 type ValueObscurator func (limit int, x interface{}) string
 
-type MessageTemplateFunc func (options ValidatorOptions, x interface{}) string
+type MessageFunc func (options ValidatorOptions, x interface{}) string
 
-type MessageTemplateFuncs map[int]MessageTemplateFunc
+type MessageFuncs map[int]MessageFunc
 
 type ValidatorOptions interface {
-	GetMessageTemplates () *MessageTemplateFuncs
+	GetMessageFuncs () *MessageFuncs
 	GetErrorMessageByKey (key int, value interface{}) string
 	GetValueObscurator () ValueObscurator
 }

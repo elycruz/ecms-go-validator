@@ -5,9 +5,9 @@ import "fmt"
 // GetErrorMessageByKey is a generic function that gets the message function from a collection
 // of message template functions and calls it using passed in options and value values.
 func GetErrorMessageByKey (options ValidatorOptions, key int, value interface{}) string {
-	messageTemplates := *options.GetMessageTemplates()
-	if messageTemplates[key] != nil {
-		return messageTemplates[key](options, value)
+	MessageFuncs := *options.GetMessageFuncs()
+	if MessageFuncs[key] != nil {
+		return MessageFuncs[key](options, value)
 	}
 	return "No error message found."
 }

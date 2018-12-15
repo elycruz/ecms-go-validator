@@ -7,13 +7,13 @@ import (
 )
 
 var (
-	digitRegex *regexp.Regexp
-	DigitValidatorMessageFuncs MessageTemplateFuncs
+	digitRegex                 *regexp.Regexp
+	DigitValidatorMessageFuncs MessageFuncs
 )
 
 func init () {
 	digitRegex = regexp.MustCompile("^\\d+$")
-	DigitValidatorMessageFuncs = MessageTemplateFuncs{
+	DigitValidatorMessageFuncs = MessageFuncs{
 		DoesNotMatchPattern: func(options ValidatorOptions, x interface{}) string {
 			ops := options.(RegexValidatorOptions)
 			return fmt.Sprintf("%v contains non-digital characters;  Received: %v", x, ops.Pattern.String())
@@ -24,7 +24,7 @@ func init () {
 func newDigitValidatorOptions () RegexValidatorOptions {
 	return RegexValidatorOptions{
 		Pattern: digitRegex,
-		MessageTemplates: &DigitValidatorMessageFuncs,
+		MessageFuncs: &DigitValidatorMessageFuncs,
 	}
 }
 
@@ -48,7 +48,7 @@ func DigitValidator (options RegexValidatorOptions) Validator {
 			return true, nil
 		case reflect.String:
 			ops := newDigitValidatorOptions()
-			ops.MessageTemplates = options.GetMessageTemplates()
+			ops.MessageFuncs = options.GetMessageFuncs()
 			return RegexValidator(ops)(x.(string))
 		default:
 			return false, []string{options.GetErrorMessageByKey(DoesNotMatchPattern, x)}

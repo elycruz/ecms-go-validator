@@ -7,13 +7,13 @@ import (
 
 type RegexValidatorOptions struct {
 	Pattern *regexp.Regexp
-	MessageTemplates *MessageTemplateFuncs
+	MessageFuncs *MessageFuncs
 }
 
-var RegexValidatorMessageFuncs *MessageTemplateFuncs
+var RegexValidatorMessageFuncs *MessageFuncs
 
 func init() {
-	RegexValidatorMessageFuncs = &MessageTemplateFuncs{
+	RegexValidatorMessageFuncs = &MessageFuncs{
 		DoesNotMatchPattern: func(options ValidatorOptions, x interface{}) string {
 			ops := options.(RegexValidatorOptions)
 			var pattern string
@@ -28,7 +28,7 @@ func init() {
 func NewRegexValidatorOptions () RegexValidatorOptions {
 	return RegexValidatorOptions{
 		Pattern: nil,
-		MessageTemplates: RegexValidatorMessageFuncs,
+		MessageFuncs: RegexValidatorMessageFuncs,
 	}
 }
 
@@ -63,8 +63,8 @@ func (n RegexValidatorOptions) GetErrorMessageByKey(key int, x interface{}) stri
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n RegexValidatorOptions) GetMessageTemplates() *MessageTemplateFuncs {
-	return n.MessageTemplates
+func (n RegexValidatorOptions) GetMessageFuncs() *MessageFuncs {
+	return n.MessageFuncs
 }
 
 func (n RegexValidatorOptions) GetValueObscurator() ValueObscurator {

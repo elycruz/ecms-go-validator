@@ -6,15 +6,15 @@ import (
 )
 
 type LengthValidatorOptions struct {
-	MessageTemplates *MessageTemplateFuncs
+	MessageFuncs *MessageFuncs
 	Min              int64
 	Max              int64
 	Inclusive        bool
 }
-var DefaultLengthValidatorMessageFuncs MessageTemplateFuncs
+var DefaultLengthValidatorMessageFuncs MessageFuncs
 
 func init() {
-	DefaultLengthValidatorMessageFuncs = MessageTemplateFuncs{
+	DefaultLengthValidatorMessageFuncs = MessageFuncs{
 		NotAValidType: func(options ValidatorOptions, x interface{}) string {
 			return fmt.Sprintf("%v is not a lengthable value type;  "+
 				"Expected an array, a slice, a map, or a string value.", x)
@@ -28,7 +28,7 @@ func init() {
 
 func NewLengthValidatorOptions() LengthValidatorOptions {
 	return LengthValidatorOptions{
-		MessageTemplates: &DefaultLengthValidatorMessageFuncs,
+		MessageFuncs: &DefaultLengthValidatorMessageFuncs,
 		Min: 0,
 		Max: 0,
 		Inclusive: true,
@@ -40,7 +40,7 @@ func LengthValidator (options LengthValidatorOptions) Validator {
 	ops.Min = options.Min
 	ops.Max = options.Max
 	ops.Inclusive = options.Inclusive
-	ops.MessageTemplates = options.MessageTemplates
+	ops.MessageFuncs = options.MessageFuncs
 	return func(x interface{}) (b bool, strings []string) {
 		rv := reflect.ValueOf(x)
 		var intToCheck int64
@@ -60,8 +60,8 @@ func (n LengthValidatorOptions) GetErrorMessageByKey(key int, x interface{}) str
 	return GetErrorMessageByKey(n, key, x)
 }
 
-func (n LengthValidatorOptions) GetMessageTemplates() *MessageTemplateFuncs {
-	return n.MessageTemplates
+func (n LengthValidatorOptions) GetMessageFuncs() *MessageFuncs {
+	return n.MessageFuncs
 }
 
 func (n LengthValidatorOptions) GetValueObscurator() ValueObscurator {
