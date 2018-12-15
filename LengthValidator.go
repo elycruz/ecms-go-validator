@@ -15,7 +15,7 @@ var DefaultLengthValidatorMessageFuncs MessageTemplateFuncs
 
 func init() {
 	DefaultLengthValidatorMessageFuncs = MessageTemplateFuncs{
-		NotALenghtableType: func(options ValidatorOptions, x interface{}) string {
+		NotAValidType: func(options ValidatorOptions, x interface{}) string {
 			return fmt.Sprintf("%v is not a lengthable value type;  "+
 				"Expected an array, a slice, a map, or a string value.", x)
 		},
@@ -46,11 +46,11 @@ func LengthValidator (options LengthValidatorOptions) Validator {
 		var intToCheck int64
 		switch rv.Kind() {
 		case reflect.Invalid:
-			return false, []string{ops.GetErrorMessageByKey(NotALenghtableType, x)}
+			return false, []string{ops.GetErrorMessageByKey(NotAValidType, x)}
 		case reflect.Slice, reflect.Array, reflect.Map, reflect.String:
 			intToCheck = int64(rv.Len())
 		default:
-			return false, []string{ops.GetErrorMessageByKey(NotALenghtableType, x)}
+			return false, []string{ops.GetErrorMessageByKey(NotAValidType, x)}
 		}
 		return IntRangeValidator(ops)(intToCheck)
 	}
