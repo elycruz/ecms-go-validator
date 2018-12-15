@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
-	"strconv"
 )
 
 var (
 	digitRegex *regexp.Regexp
 	DigitValidatorMessageFuncs MessageTemplateFuncs
-	digitValidator Validator
 )
 
 func init () {
@@ -21,7 +19,6 @@ func init () {
 			return fmt.Sprintf("%v contains non-digital characters;  Received: %v", x, ops.Pattern.String())
 		},
 	}
-	digitValidator = RegexValidator(newDigitValidatorOptions())
 }
 
 func newDigitValidatorOptions () RegexValidatorOptions {
@@ -31,23 +28,36 @@ func newDigitValidatorOptions () RegexValidatorOptions {
 	}
 }
 
-func DigitValidator () Validator {
+// DigitValidator - Returns `(true, nil)` for `uint`, `int`, and strings containing
+// only digit characters (numbers).  For every other value the returned validator
+// will always return `(false, []string{})` where the second return value is
+// the error messages returned for current run.
+// Note: The `Pattern` property of passed in `RegexValidatorOptions` gets ignored
+// and the internally defined one gets used.
+func DigitValidator (options RegexValidatorOptions) Validator {
 	return func (x interface{}) (bool, []string) {
 		rv := reflect.ValueOf(x)
 		k := rv.Kind()
-		var converted string
 		switch k {
-		case reflect.Uint:
-			converted = strconv.FormatUint(x.(uint64), 10)
-		case reflect.Int:
-			converted = strconv.FormatInt(rv.Int(), 10)
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			return true, nil
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			if rv.Int() < 0 {
+				return false, []string{options.GetErrorMessageByKey(DoesNotMatchPattern, x)}
+			}
+			return true, nil
 		case reflect.String:
-			converted = x.(string)
-			// @todo add byte-string check
-			// @todo generate correct error message for invalid types here
+			ops := newDigitValidatorOptions()
+			ops.MessageTemplates = options.GetMessageTemplates()
+			return RegexValidator(ops)(x.(string))
 		default:
-			converted = ""
+			return false, []string{options.GetErrorMessageByKey(DoesNotMatchPattern, x)}
 		}
-		return digitValidator(converted)
 	}
+}
+
+// DigitValidator1 - Ignores options param and just returns a validator
+// which contains default error messages in message templates
+func DigitValidator1 () Validator {
+	return DigitValidator(newDigitValidatorOptions())
 }
