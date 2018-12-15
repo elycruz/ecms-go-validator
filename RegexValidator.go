@@ -5,10 +5,6 @@ import (
 	"regexp"
 )
 
-const (
-	DoesNotMatchPattern = iota
-)
-
 type RegexValidatorOptions struct {
 	Pattern *regexp.Regexp
 	MessageTemplates *MessageTemplateFuncs

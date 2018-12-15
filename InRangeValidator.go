@@ -6,11 +6,6 @@ import (
 	"reflect"
 )
 
-const (
-	NotWithinRange = iota
-	NotARangeType
-)
-
 var DefaultInRangeMessageFuncs = MessageTemplateFuncs{
 	NotARangeType: func(options ValidatorOptions, x interface{}) string {
 		return fmt.Sprintf("%v is not a validatable numeric type", x)

@@ -9,7 +9,6 @@ type NotEmptyValidatorOptions struct {
 }
 
 const (
-	EmptyNotAllowed = iota
 	DefaultEmptyNotAllowedMsg = "Empty values are not allowed."
 )
 

@@ -15,7 +15,9 @@ allows users to customize any one of the messages contained in the `MessageTempl
 
 ## Mvp Todos
 - [x] - Remove `ValidationResult` struct.  We ca return multiple values in go.  Is there really a need for `ValidationResult`?
-- [ ] - Change Validator signature to `func (x interface{}) []string`
+
+## Tentative Todos
+- [ ] - Change Validator signature to `func (x interface{}) []string` (requires more evaluation possibly consensus?).
 
 ## License
 BSD-3-Clause
