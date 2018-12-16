@@ -1,6 +1,8 @@
 package ecms_validator
 
-import "testing"
+import (
+	"testing"
+)
 
 type LengthValidatorTestCase struct {
 	Name string
@@ -11,11 +13,13 @@ type LengthValidatorTestCase struct {
 	Max int64
 }
 
-func init () {
-
-}
-
 func TestLengthValidator(t *testing.T) {
+	emptyChan1 := make(chan int, 0)
+	emptyChan2 := make(chan int, 2)
+	nonEmptyChan := make(chan int, 2)
+	nonEmptyChan <- 1
+	nonEmptyChan <- 2
+
 	for _, testCase := range []LengthValidatorTestCase{
 		{
 			Name:                "nil, false",
@@ -32,6 +36,9 @@ func TestLengthValidator(t *testing.T) {
 		{"[2]byte{'a', 'b'}, true", [2]byte{'a', 'b'}, true, 0, 1, 3},
 		{"map[int]int{}, false", make(map[int]int, 0), false, 1, 1, 3},
 		{"map[int]int{1,2}, true", map[int]int{1: 2}, true, 0, 1, 3},
+		{"chan int{}, false", emptyChan1, false, 1, 1, 3},
+		{"[2]chan int{}, false", emptyChan2, false, 1, 1, 3},
+		{"chan int{1, 2}, true", nonEmptyChan, true, 0, 1, 3},
 	} {
 		t.Run(testCase.Name, func(t *testing.T) {
 			validatorOptions := NewLengthValidatorOptions()
@@ -56,4 +63,9 @@ func TestLengthValidator(t *testing.T) {
 			}
 		})
 	}
+
+	// Close channels
+	close(emptyChan1)
+	close(emptyChan2)
+	close(nonEmptyChan)
 }
