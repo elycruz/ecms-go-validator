@@ -1,11 +1,13 @@
 # ecms-go-validator
 Validator package inspired by zend-validator.
 
-Also (I know) there are good validator packages already available for go (one even that resembles (somewhat closely) the ZendFramework/Validator), 
-though for some needs more homogeneous interfaces are required.
+Also (I know) there are good validator packages already available for go (for example, go-ozzo/ozzo-validator comes close to zend framework's validator 
+though merges the interface as part of the package), 
+though for some needs lower level interfaces are required.
 
-- A validator takes an options object and/or the value to validate.
-In my  
+For the zend framework version of the `Validator`, `Input` and `InputFilter` classes the `Validator` class
+is a pluggable unit.  The validation parts, in an application, usually happen from the `Input` and `InputFilter` classes.
+This library is just the `Validator`'s part.  
 
 ## Common Use Cases
 - For creating input validation classes (constructors that can have multiple validators and/or filters for validating and filtering a given field in a dataset).
