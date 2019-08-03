@@ -1,6 +1,6 @@
 package ecms_validator
 
-type ValueObscurator func (limit int, x interface{}) string
+type ValueObscurator func (limit int, x string) string
 
 type MessageFunc func (options ValidatorOptions, x interface{}) string
 
