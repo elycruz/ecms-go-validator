@@ -1,38 +1,35 @@
 # ecms-go-validator
-Validator package inspired by zend-validator.
+A validator package which offers the parts required for validation as separate parts: messaging templates, validators, 
+validator options, and validator getters.
 
-Also (I know) there are good validator packages already available for go (for example, go-ozzo/ozzo-validator comes close to zend framework's validator 
-though merges the interface as part of the package), 
-though for some needs lower level interfaces are required.
+There are already good validation libraries out there but none that separate out the components of validation into lower
+level primitives (which are useful for composing your validation components in more precise manners;  Example: 
+Validating with locale based content in messaging and allowing multiple messages per input).  
 
-For the zend framework version of the `Validator`, `Input` and `InputFilter` classes the `Validator` class
-is a pluggable unit.  The validation parts, in an application, usually happen from the `Input` and `InputFilter` classes.
-This library is just the `Validator`'s part.  
+Inspired by zend-validator.
 
 ## Common Use Cases
-- For creating input validation classes (constructors that can have multiple validators and/or filters for validating and filtering a given field in a dataset).
-- For creating input filter chain classes (constructors that take multiple inputs 
-and validates them (inputs have to be instances of some input validation class)) return a conglomerate of results as one result.
-- @note ZendFramework/Validator ZendFramework/InputFilter do exactly what is mentioned
-in the above bullet points. 
+- Validating an input (an input could have many validation points (length, notEmpty, specificChars etc.))
+- Validating all inputs in an input map (ex: `map[string]Input{}`);  Same as "Validating form inputs".
  
 ## Docs
-@todo Add docs
+Look at `./ValidatorTypes.go` then other sources for now.
+@todo Add method docs to readme and standalone.
 
 ## Examples:
 
 Given our default types:
 ```go
-// Default types
+// ./ValidatorTypes.go
 package ecms_validator
 
-// For obscuring values in error messages (composed into validators 
-//  where required (for example in a credit-card validator)) 
-type ValueObscurator func (limit int, x interface{}) string
+// For obscuring values in error messages (composed into validators
+//  where required (for example in a credit-card validator))
+type ValueObscurator func (limit int, str string) string
 
-type MessageFunc func (options ValidatorOptions, x interface{}) string
+type MessageFunc func (options ValidatorOptions, x interface{}) string // returns message
 
-type MessageFuncs map[int]MessageFunc
+type MessageFuncs map[int]MessageFunc // message templates
 
 type ValidatorOptions interface {
 	GetMessageFuncs () *MessageFuncs
@@ -97,11 +94,72 @@ func (n NotNilValidatorOptions) GetValueObscurator () ValueObscurator {
 
 ```
 
-## Mvp Todos
-- [x] - Remove `ValidationResult` struct.  We ca return multiple values in go.  There is no need for `ValidationResult`.
+Then usage of created validator:
+```go
+package somepackage
+import "net/http"
 
-## Tentative Todos
-- [X] - ~~Change Validator signature to `func (x interface{}) []string` (requires more evaluation/consensus).~~  We're going to keep the current return format for validators;  I.e., `(bool, []string{})`;
+type JsonModel struct {
+	Request map[string]interface{}
+	Errors  map[int]interface{}
+	Data    map[string]interface{}
+}
+
+func NewJsonModel() JsonModel {
+	return JsonModel{
+		map[string]interface{}{},
+		map[int]interface{}{},
+		map[string]interface{}{},
+	}
+}
+
+// Would preferably be instantiated with action call (and possibly seeded with some locale based error messages
+//  for it's given cases)
+var notNilValidator = NotNilValidator(NotNilValidatorOptions())
+
+func SomeAction (r *http.Request, w http.ResponseWriter) {
+    // Outgoing json view model
+    out := NewJsonModel()
+    out.Data["success"] = false
+
+    // Or some other model
+    incoming := NewJsonModel()
+    
+    // Ensure there are no errors in http "POST" form data
+    if err := r.ParseForm(); err != nil {
+        // ...
+        return
+    }
+
+	// Parse incoming body
+	bytesFromBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		// ...
+		return
+	}
+
+	// Unmarshal into struct
+	if err := json.Unmarshal(bytesFromBody, &incoming); err != nil {
+		// ...
+		return
+	}
+
+    result, messages := notNilValidator(incoming.Data)
+    if result != true {
+        // ... Write header
+        // ... Send back result and messages
+        // Hypothetical error-codes package
+        out.Errors[errorcodes.INVALID_INPUT_DATA] = errorcodes.messagesMap[errorcodes.INVALID_INPUT_DATA]
+        out.Data["messages"] = messages // ui pertinent messages
+        out.Data["result"] = result     // ""
+        return
+    }
+
+    // Else continue with processing
+}
+```
+
+@note Input and InputFilter examples coming soon (@todo).
 
 ## License
 BSD-3-Clause

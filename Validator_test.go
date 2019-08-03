@@ -17,6 +17,18 @@ type ObscuratorTestCase struct {
 	ObscureLen int
 }
 
+
+type GetErrorMessageByKeyTestCase struct {
+	Name       string
+	Control    string
+	Expected   string
+	ObscureLen int
+}
+
+func TestGetErrorMessageByKey(t *testing.T) {
+
+}
+
 func TestDefaultValueObscurator(t *testing.T) {
 	for _, tc := range append(
 		[]ObscuratorTestCase{

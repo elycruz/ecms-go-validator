@@ -1,10 +1,12 @@
 package ecms_validator
 
-type ValueObscurator func (limit int, x string) string
+// For obscuring values in error messages (composed into validators
+//  where required (for example in a credit-card validator))
+type ValueObscurator func (limit int, str string) string
 
-type MessageFunc func (options ValidatorOptions, x interface{}) string
+type MessageFunc func (options ValidatorOptions, x interface{}) string // returns message
 
-type MessageFuncs map[int]MessageFunc
+type MessageFuncs map[int]MessageFunc // message templates
 
 type ValidatorOptions interface {
 	GetMessageFuncs () *MessageFuncs
