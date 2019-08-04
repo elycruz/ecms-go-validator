@@ -8,7 +8,7 @@ import (
 
 var DefaultInRangeMessageFuncs = MessageFuncs{
 	NotAValidType: func(options ValidatorOptions, x interface{}) string {
-		return fmt.Sprintf("%v is not a validatable numeric type", x)
+		return fmt.Sprintf("%v is not a validatable numeric type.", x)
 	},
 }
 
@@ -31,7 +31,7 @@ func NewIntRangeValidatorOptions() IntValidatorOptions {
 		MessageFuncs: &MessageFuncs{
 			NotWithinRange: func(options ValidatorOptions, x interface{}) string {
 				ops := options.(IntValidatorOptions)
-				return fmt.Sprintf("%v is not within range %d and %d", x, ops.Min, ops.Max)
+				return fmt.Sprintf("%v is not within range %d and %d.", x, ops.Min, ops.Max)
 			},
 			NotAValidType: DefaultInRangeMessageFuncs[NotAValidType],
 		},

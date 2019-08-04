@@ -11,6 +11,7 @@ type LengthValidatorOptions struct {
 	Max              int64
 	Inclusive        bool
 }
+
 var DefaultLengthValidatorMessageFuncs MessageFuncs
 
 func init() {
@@ -20,7 +21,7 @@ func init() {
 				"Expected an array, a slice, a map, or a string value.", x)
 		},
 		NotWithinRange: func(options ValidatorOptions, x interface{}) string {
-			ops := options.(IntValidatorOptions)
+			ops := options.(IntValidatorOptions) // We pass the message getter to IntRangeValidator instance hence ...
 			return fmt.Sprintf("%v is not within given length range of %d and %d", x, ops.Min, ops.Max)
 		},
 	}
