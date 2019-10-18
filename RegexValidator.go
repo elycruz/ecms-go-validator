@@ -20,7 +20,7 @@ func init() {
 			if ops.Pattern != nil {
 				pattern = ops.Pattern.String()
 			}
-			return fmt.Sprintf("%v is does not match required pattern `%v`", x, pattern)
+			return fmt.Sprintf("%v does not match required pattern `%v`", x, pattern)
 		},
 	}
 }
